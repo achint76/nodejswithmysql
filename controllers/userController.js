@@ -1,10 +1,22 @@
 const userModel = require('../models/userModel');
+function getAllUsers(req, res) {
+
+  userModel.getAllUsers((error, users) => {
+    console.log("TEST")
+    if (error) {
+      res.status(500).json({ error: 'Error fetching users' });
+    } else {
+      res.status(200).json(users);
+    }
+  });
+}
 
 // Create a new user
 function createUser(req, res) {
   const user = req.body;
   userModel.createUser(user, (error, result) => {
     if (error) {
+      console.error("Error Creating User:", error);
       res.status(500).json({ error: 'Error creating user' });
     } else {
       res.status(201).json({ message: 'User created successfully', user: result });
@@ -14,6 +26,8 @@ function createUser(req, res) {
 
 // Get a user by ID
 function getUserById(req, res) {
+  console.log('Request method:', req, res);
+
   const userId = req.params.id;
   userModel.getUserById(userId, (error, user) => {
     if (error) {
@@ -66,16 +80,7 @@ function getUsersWithPagination(req, res) {
   });
 }
 
-function getAllUsers(req, res){
-  userModel.getAllUsers((error, users) => {
-    if (error) {
-      res.status(500).json({ error: 'Error fetching users' });
-    } else {
-      res.status(200).json(users);
-    }
-  });
 
-}
 
 module.exports = {
   createUser,
